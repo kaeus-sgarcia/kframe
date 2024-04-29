@@ -2,7 +2,7 @@
 
 [![PyPI - Version](https://img.shields.io/pypi/v/kframe.svg)](https://pypi.org/project/kframe)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/kframe.svg)](https://pypi.org/project/kframe)
-
+![CI/CD](https://github.com/github/docs/actions/workflows/dev_ci/badge.svg?branch=development)
 -----
 
 **Table of Contents**
