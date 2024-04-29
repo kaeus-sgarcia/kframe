@@ -1,0 +1,121 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "kframe"
+dynamic = ["version"]
+description = 'Kaeus development framework'
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MS-PL"
+keywords = []
+authors = [
+  { name = "Sebastian Garcia", email = "sgarcia@kaeusanalytics.com" },
+]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Environment :: Console",
+  "Operating System :: POSIX :: Linux",
+  "Operating System :: MacOS",
+]
+dependencies = [
+]
+
+[project.urls]
+# TODO: Update these URLs
+Documentation = "https://github.com/unknown/kframe#readme"
+Issues = "https://github.com/unknown/kframe/issues"
+Source = "https://github.com/unknown/kframe"
+
+[tool.hatch.version]
+path = "src/kframe/__about__.py"
+
+# Development environment
+[tool.hatch.envs.default]
+dependencies = [
+  "coverage[toml]>=6.5",
+  "pytest",
+  "ruff",
+  "pre-commit",
+  "python-semantic-release",
+]
+[tool.hatch.envs.default.scripts]
+test = "pytest {args:tests}"
+test-cov = "coverage run -m pytest {args:tests}"
+cov-report = [
+  "- coverage combine",
+  "coverage report",
+]
+cov = [
+  "test-cov",
+  "cov-report",
+]
+check = "ruff check --fix"
+preview-version = "semantic-release version --print"
+
+[tool.hatch.envs.quality]
+dependencies = [
+  "coverage[toml]>=6.5",
+  "pytest",
+]
+
+[[tool.hatch.envs.quality.matrix]]
+python = ["3.10", "3.11", "3.12"]
+
+[tool.hatch.envs.quality.scripts]
+test = "pytest {args:tests}"
+
+[tool.hatch.envs.types]
+dependencies = [
+  "mypy>=1.0.0",
+]
+[tool.hatch.envs.types.scripts]
+check = "mypy --install-types --non-interactive {args:src/kframe tests}"
+
+[tool.coverage.run]
+source_pkgs = ["kframe", "tests"]
+branch = true
+parallel = true
+omit = [
+  "src/kframe/__about__.py",
+]
+
+[tool.coverage.paths]
+kframe = ["src/kframe", "*/kf-cliconfig/src/kframe"]
+tests = ["tests", "*/kf-cliconfig/tests"]
+
+[tool.coverage.report]
+exclude_lines = [
+  "no cov",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+]
+
+[tool.ruff]
+exclude = [
+  "tests/*",
+  "*/__about__.py",
+]
+
+[tool.ruff.lint]
+preview = true
+extend-ignore = ["TID252", "TRY003", "EM10", "SLF", "FBT", "ARG"]
+
+[tool.semantic_release.branches.main]
+match = "(main)"
+prerelease = false
+
+[tool.semantic_release.branches.quality]
+match = "(qa)"
+prerelease = true
+prerelease_token = "rc"
+
+[tool.semantic_release.branches.development]
+match = "(development)"
+prerelease = true
+prerelease_token = "dev"
