@@ -116,6 +116,6 @@ prerelease = true
 prerelease_token = "rc"
 
 [tool.semantic_release.branches.development]
-match = "(qa)"
+match = "(development)"
 prerelease = true
 prerelease_token = "dev"
