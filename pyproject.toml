@@ -111,7 +111,7 @@ match = "(main)"
 prerelease = false
 
 [tool.semantic_release.branches.quality]
-match = "(qa)"
+match = "(quality)"
 prerelease = true
 prerelease_token = "rc"
 

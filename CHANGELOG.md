@@ -2,6 +2,15 @@
 
 
 
+## v0.1.0-dev.3 (2024-04-29)
+
+### Fix
+
+* fix: Merge branch &#39;development&#39; of github.com:kaeus-sgarcia/kframe into development ([`b1bc267`](https://github.com/kaeus-sgarcia/kframe/commit/b1bc267397fb7d1db881b72a1871c263f76a2db2))
+
+* fix: Fix CI/CD for quality brach ([`e1f38be`](https://github.com/kaeus-sgarcia/kframe/commit/e1f38be61726b911b7bce4de8b5771e2f70faf73))
+
+
 ## v0.1.0-dev.2 (2024-04-29)
 
 ### Fix
