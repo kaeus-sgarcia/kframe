@@ -60,7 +60,7 @@ jobs:
       run: hatch build
 
     - name: Publish
-      run: hatch publish 
+      run: hatch publish --user __token__
 
 
 
