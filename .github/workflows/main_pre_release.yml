@@ -60,7 +60,9 @@ jobs:
       run: hatch build
 
     - name: Publish
-      run: hatch publish --user __token__
+      run: hatch publish --user __token__ --yes
+      env:
+        HATCH_INDEX_AUTH: ${{ secrets.PYPI_TOKEN }}
 
 
 

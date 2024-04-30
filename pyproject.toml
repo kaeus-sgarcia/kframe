@@ -28,9 +28,9 @@ dependencies = [
 
 [project.urls]
 # TODO: Update these URLs
-Documentation = "https://github.com/unknown/kframe#readme"
-Issues = "https://github.com/unknown/kframe/issues"
-Source = "https://github.com/unknown/kframe"
+Documentation = "https://github.com/kaeus-sgarcia/kframe#readme"
+Issues = "https://github.com/kaeus-sgarcia/kframe/issues"
+Source = "https://github.com/kaeus-sgarcia/kframe"
 
 # Development environment
 [tool.hatch.envs.default]
