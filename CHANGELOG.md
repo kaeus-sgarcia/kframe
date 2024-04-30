@@ -2,6 +2,21 @@
 
 
 
+## v0.1.0-dev.4 (2024-04-30)
+
+### Ci
+
+* ci: Adjust CI/CD pipeline ([`3fea5c4`](https://github.com/kaeus-sgarcia/kframe/commit/3fea5c4ea729e36729ceceac192669b7d996ab2c))
+
+* ci: Ajust quality branch CD action ([`44e3763`](https://github.com/kaeus-sgarcia/kframe/commit/44e3763645670ec6a0171b19a16ed90aedbd04fd))
+
+* ci: Adjust CI/CD github actions ([`3e46663`](https://github.com/kaeus-sgarcia/kframe/commit/3e46663ca5fda365e23b39883162e8e262f920a4))
+
+### Fix
+
+* fix: Fix development, qa, and main branches CI/CD ([`a962169`](https://github.com/kaeus-sgarcia/kframe/commit/a962169c5c922ed28b2498aa803740c31cb0f7e0))
+
+
 ## v0.1.0-dev.3 (2024-04-29)
 
 ### Fix
