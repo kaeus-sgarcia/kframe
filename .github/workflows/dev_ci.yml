@@ -55,7 +55,7 @@ jobs:
         uses: commitizen-tools/commitizen-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          changelog_increment_filename: "body.md"gi
+          changelog_increment_filename: "body.md"
           prerelease: "alpha"
 
         
