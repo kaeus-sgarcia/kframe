@@ -117,3 +117,4 @@ version_files = [
     "src/kframe/__about__.py:^__version__"
 ]
 changelog_increment_filename = "body.md"
+changelog_merge_prerelease = true
