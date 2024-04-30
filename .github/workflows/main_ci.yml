@@ -2,7 +2,7 @@ name: Main CI/CD
 
 on:
   pull_request:
-    branches: [main, qa]
+    branches: [main]
 
 concurrency:
   group: test-${{ github.head_ref }}
@@ -39,23 +39,4 @@ jobs:
     - name: Run tests
       run: hatch run cov
 
-  cd:
-    name: CD
-    runs-on: ubuntu-latest
-    concurrency: release
-    needs: ci
-    permissions:
-      id-token: write
-      contents: write
-
-    steps:
-    - uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
-
-    - name: Python Semantic Release
-      uses: python-semantic-release/python-semantic-release@master
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-
-  
+        
