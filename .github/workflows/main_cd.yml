@@ -2,7 +2,7 @@ name: Main CI/CD
 
 on:
   push:
-    branches: [quality]
+    branches: [main]
 
 concurrency:
   group: test-${{ github.head_ref }}
