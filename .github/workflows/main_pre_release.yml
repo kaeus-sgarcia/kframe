@@ -36,15 +36,6 @@ jobs:
           changelog: false
           prerelease: "rc"
 
-
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ steps.cz.outputs.version }}
-          prerelease: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: New revision
         id: set_new_revision
         run: |
@@ -62,14 +53,11 @@ jobs:
         python-version: ['3.10', '3.11', '3.12']
     permissions:
       contents: write
-    env:
-      REVISION: ${{ needs.version_bump.outputs.new_revision }}
 
     steps:
     - name: Revision
       run: |
         echo "From bump: ${{ needs.version_bump.outputs.new_revision }}"
-        echo "REVISION=${{ env.REVISION }}"
 
     - uses: actions/checkout@v4
       with:
@@ -109,14 +97,11 @@ jobs:
     needs: version_bump
     permissions:
       contents: write
-    env:
-      REVISION: ${{ needs.version_bump.outputs.new_revision }}
 
     steps:
     - name: Revision
       run: |
         echo "From bump: ${{ needs.version_bump.outputs.new_revision }}"
-        echo "REVISION=${{ env.REVISION }}"
 
     - uses: actions/checkout@v4
       with:
@@ -147,30 +132,43 @@ jobs:
         name: kframe-sdist
         path: ./dist/*.tar.gz
 
-  upload_pypi:
-    needs: [build_wheels, build_sdist]
-    runs-on: ubuntu-latest
+  release_and_publish:
+    name: "Create release and publish to PyPI"
+    runs-on: "ubuntu-latest"
+    needs: [build_wheels, build_sdist, version_bump]
+    permissions:
+      contents: write
 
     steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ needs.version_bump.outputs.new_revision }}
+    - name: Check out
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ needs.version_bump.outputs.new_revision }}
 
-      - uses: actions/download-artifact@v4
-        with:
-          pattern: kframe-*
-          path: dist
-          merge-multiple: true
-      
-      - name: Set up Python 3.12
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.12"
+    - uses: actions/download-artifact@v4
+      with:
+        pattern: kframe-*
+        path: dist
+        merge-multiple: true
+    
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.12"
+
+    - name: Create release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: ${{ needs.version_bump.outputs.new_revision }}
+        files: dist/*
+        prerelease: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   
-      - name: Install Hatch
-        run: pip install --upgrade hatch
-  
-      - name: Publish
-        run: hatch publish --user __token__ --yes
-        env:
-          HATCH_INDEX_AUTH: ${{ secrets.PYPI_TOKEN }}
+    - name: Install Hatch
+      run: pip install --upgrade hatch
+
+    - name: Publish
+      run: hatch publish --user __token__ --yes
+      env:
+        HATCH_INDEX_AUTH: ${{ secrets.PYPI_TOKEN }}
