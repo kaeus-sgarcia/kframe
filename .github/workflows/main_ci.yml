@@ -1,4 +1,4 @@
-name: CI
+name: Create development version
 
 on:
   pull_request:

@@ -1,8 +1,8 @@
-name: Pre-release
+name: Build
 
 on:
   release:
-    types: [prereleased]
+    types: [prereleased, released]
 
 concurrency:
   group: build-${{ github.head_ref }}

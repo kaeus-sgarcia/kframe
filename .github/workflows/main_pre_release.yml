@@ -1,4 +1,4 @@
-name: Pre-release
+name: Create pre-release
 
 on:
   workflow_dispatch
@@ -33,10 +33,10 @@ jobs:
           changelog: false
           prerelease: "rc"
 
+
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          body_path: "body.md"
           tag_name: ${{ steps.cz.outputs.version }}
           prerelease: true
         env:
