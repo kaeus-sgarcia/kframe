@@ -1,3 +1,9 @@
+## v0.2.0a5 (2024-04-30)
+
+### Fix
+
+- Fix development, qa, and main branches CI/CD
+
 ## v0.2.0a4 (2024-04-30)
 
 ### Fix
