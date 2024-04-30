@@ -44,10 +44,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: New revision
-        id: new_revision
+        id: set_new_revision
         run: |
-          echo "new_revision=${{ env.REVISION}}" 
-          echo "new_revision=${{ env.REVISION}}" >> $GITHUB_OUTPUT
+          echo "NEW_REVISION=${{ env.REVISION}}" 
+          echo "NEW_REVISION=${{ env.REVISION}}" >> $GITHUB_OUTPUT
 
   build:
     name: Build for Python ${{ matrix.python-version }} on ${{ startsWith(matrix.os, 'macos-') && 'macOS' || startsWith(matrix.os, 'windows-') && 'Windows' || 'Linux' }}
@@ -61,12 +61,12 @@ jobs:
     permissions:
       contents: write
     env:
-      REVISION: ${{ needs.version_bump.outputs.new_revision }}
+      REVISION: ${{ needs.version_bump.outputs.new-revision }}
 
     steps:
     - name: Revision
       run: |
-        echo "From bump: ${{ needs.version_bump.outputs.new_revision }}"
+        echo "From bump: ${{ needs.version_bump.outputs.new-revision }}"
         echo "REVISION=${{ env.REVISION }}"
 
     - uses: actions/checkout@v4
