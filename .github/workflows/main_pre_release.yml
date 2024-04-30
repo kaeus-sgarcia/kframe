@@ -85,7 +85,7 @@ jobs:
       run: hatch run cov
 
     - name: Build
-      run: hatch build --format wheel
+      run: hatch build -t wheel
 
     - name: Upload artifact to release
       uses: svenstaro/upload-release-action@v2
@@ -135,7 +135,7 @@ jobs:
       run: hatch run cov
 
     - name: Build
-      run: hatch build --format sdist
+      run: hatch build -t sdist
 
     - name: Upload artifact to release
       uses: svenstaro/upload-release-action@v2
