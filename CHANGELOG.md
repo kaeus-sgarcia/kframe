@@ -1,3 +1,10 @@
+## v0.2.3a2 (2024-04-30)
+
+### Fix
+
+- Merge branch 'main' of github.com:kaeus-sgarcia/kframe
+- Fix development, qa, and main branches CI/CD
+
 ## v0.2.3a1 (2024-04-30)
 
 ### Fix
