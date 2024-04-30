@@ -60,6 +60,6 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           changelog_increment_filename: "body.md"
-          prerelease: "alpha"
+          devrelease: ${GITHUB_RUN_ID}
 
         

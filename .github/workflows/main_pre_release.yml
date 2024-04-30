@@ -1,8 +1,4 @@
-name: Main CI/CD
-
-on:
-  release:
-    types: [prereleased]
+name: Pre-release
 
 concurrency:
   group: test-${{ github.head_ref }}
