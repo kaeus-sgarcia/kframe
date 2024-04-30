@@ -2,7 +2,7 @@ name: Main CI/CD
 
 on:
   release:
-    types: [prereleased]
+    types: [released]
 
 concurrency:
   group: test-${{ github.head_ref }}
