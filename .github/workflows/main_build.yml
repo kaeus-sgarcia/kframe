@@ -2,7 +2,7 @@ name: Build
 
 on:
   release:
-    types: [prereleased, released]
+    types: [published]
 
 concurrency:
   group: build-${{ github.head_ref }}
