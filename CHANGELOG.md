@@ -2,6 +2,13 @@
 
 
 
+## v0.1.0-dev.5 (2024-04-30)
+
+### Fix
+
+* fix: Fix development, qa, and main branches CI/CD ([`d7ea456`](https://github.com/kaeus-sgarcia/kframe/commit/d7ea4562c3d928143106732ba57fe7dc3e7661ae))
+
+
 ## v0.1.0-dev.4 (2024-04-30)
 
 ### Ci
