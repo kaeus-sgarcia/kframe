@@ -1,0 +1,119 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "kframe"
+version = "0.2.0b3"
+description = 'Kaeus development framework'
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MS-PL"
+keywords = []
+authors = [
+  { name = "Sebastian Garcia", email = "sgarcia@kaeusanalytics.com" },
+]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Environment :: Console",
+  "Operating System :: POSIX :: Linux",
+  "Operating System :: MacOS",
+]
+dependencies = [
+]
+
+[project.urls]
+# TODO: Update these URLs
+Documentation = "https://github.com/unknown/kframe#readme"
+Issues = "https://github.com/unknown/kframe/issues"
+Source = "https://github.com/unknown/kframe"
+
+# Development environment
+[tool.hatch.envs.default]
+dependencies = [
+  "coverage[toml]>=6.5",
+  "pytest",
+  "ruff",
+  "pre-commit",
+  "commitizen",
+]
+[tool.hatch.envs.default.scripts]
+test = "pytest {args:tests}"
+test-cov = "coverage run -m pytest {args:tests}"
+cov-report = [
+  "- coverage combine",
+  "coverage report",
+]
+cov = [
+  "test-cov",
+  "cov-report",
+]
+check = "ruff check --fix"
+preview-version = "semantic-release version --print"
+
+[tool.hatch.envs.quality]
+dependencies = [
+  "coverage[toml]>=6.5",
+  "pytest",
+]
+
+[[tool.hatch.envs.quality.matrix]]
+python = ["3.10", "3.11", "3.12"]
+
+[tool.hatch.envs.quality.scripts]
+test = "pytest {args:tests}"
+
+[tool.hatch.envs.types]
+dependencies = [
+  "mypy>=1.0.0",
+]
+[tool.hatch.envs.types.scripts]
+check = "mypy --install-types --non-interactive {args:src/kframe tests}"
+
+[tool.coverage.run]
+source_pkgs = ["kframe", "tests"]
+branch = true
+parallel = true
+omit = [
+  "src/kframe/__about__.py",
+]
+
+[tool.coverage.paths]
+kframe = ["src/kframe"]
+tests = ["tests", "*/kframe/tests"]
+
+[tool.coverage.report]
+exclude_lines = [
+  "no cov",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+]
+
+[tool.ruff]
+exclude = [
+  "tests/*",
+  "*/__about__.py",
+]
+
+[tool.ruff.lint]
+preview = true
+extend-ignore = ["TID252", "TRY003", "EM10", "SLF", "FBT", "ARG"]
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+tag_format = "v$version"
+version_scheme = "pep440"
+version_provider = "pep621"
+update_changelog_on_bump = true
+annoted_tag = true
+major_version_zero = true
+prerelease_offset = 1
+version_files = [
+    "pyproject.toml/project:^version",
+    "src/kframe/__about__.py:^__version__"
+]
+changelog_increment_filename = "body.md"
