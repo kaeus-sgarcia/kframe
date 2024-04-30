@@ -51,8 +51,8 @@ jobs:
           echo "new_revision=${{ env.REVISION}}" 
           echo "new_revision=${{ env.REVISION}}" >> $GITHUB_OUTPUT
 
-  build:
-    name: Build for Python ${{ matrix.python-version }} on ${{ startsWith(matrix.os, 'macos-') && 'macOS' || startsWith(matrix.os, 'windows-') && 'Windows' || 'Linux' }}
+  build_wheels:
+    name: Build Wheel for Python ${{ matrix.python-version }} on ${{ startsWith(matrix.os, 'macos-') && 'macOS' || startsWith(matrix.os, 'windows-') && 'Windows' || 'Linux' }}
     runs-on: ${{ matrix.os }}
     needs: version_bump
     strategy:
@@ -85,7 +85,7 @@ jobs:
       run: hatch run cov
 
     - name: Build
-      run: hatch build
+      run: hatch build --format wheel
 
     - name: Upload artifact to release
       uses: svenstaro/upload-release-action@v2
@@ -95,3 +95,84 @@ jobs:
         tag: ${{ env.REVISION }}
         overwrite: true
         file_glob: true
+
+    - uses: actions/upload-artifact@v4
+      with:
+        name: kframe-wheels-${{ matrix.os }}-${{ strategy.job-index }}
+        path: ./dist/*.whl
+
+  build_sdist:
+    name: Build source distribution for Python ${{ matrix.python-version }} on ${{ startsWith(matrix.os, 'macos-') && 'macOS' || startsWith(matrix.os, 'windows-') && 'Windows' || 'Linux' }}
+    runs-on: ${{ matrix.os }}
+    needs: version_bump
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ['3.10', '3.11', '3.12']
+    permissions:
+      contents: write
+    env:
+      REVISION: ${{ needs.version_bump.outputs.new_revision }}
+
+    steps:
+    - name: Revision
+      run: |
+        echo "From bump: ${{ needs.version_bump.outputs.new_revision }}"
+        echo "REVISION=${{ env.REVISION }}"
+
+    - uses: actions/checkout@v4
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install Hatch
+      run: pip install --upgrade hatch
+
+    - name: Run tests
+      run: hatch run cov
+
+    - name: Build
+      run: hatch build --format sdist
+
+    - name: Upload artifact to release
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: dist/*
+        tag: ${{ env.REVISION }}
+        overwrite: true
+        file_glob: true
+
+    - uses: actions/upload-artifact@v4
+      with:
+        name: kframe-sdist-${{ matrix.os }}-${{ strategy.job-index }}
+        path: ./dist/*.tar.gz
+
+  upload_pypi:
+    needs: [build_wheels, build_sdist]
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: kframe-*
+          path: dist
+          merge-multiple: true
+      
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.12
+  
+      - name: Install Hatch
+        run: pip install --upgrade hatch
+  
+      - name: Publish
+        run: hatch publish --user __token__ --yes
+        env:
+          HATCH_INDEX_AUTH: ${{ secrets.PYPI_TOKEN }}
