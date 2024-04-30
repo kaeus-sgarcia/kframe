@@ -1,10 +1,10 @@
 [build-system]
-requires = ["hatchling", "hatch-semver"]
+requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
 name = "kframe"
-dynamic = ["version"]
+version = "0.2.0a2"
 description = 'Kaeus development framework'
 readme = "README.md"
 requires-python = ">=3.10"
@@ -32,9 +32,6 @@ Documentation = "https://github.com/unknown/kframe#readme"
 Issues = "https://github.com/unknown/kframe/issues"
 Source = "https://github.com/unknown/kframe"
 
-[tool.hatch.version]
-path = "src/kframe/__about__.py"
-
 # Development environment
 [tool.hatch.envs.default]
 dependencies = [
@@ -42,7 +39,7 @@ dependencies = [
   "pytest",
   "ruff",
   "pre-commit",
-  "python-semantic-release",
+  "commitizen",
 ]
 [tool.hatch.envs.default.scripts]
 test = "pytest {args:tests}"
@@ -86,8 +83,8 @@ omit = [
 ]
 
 [tool.coverage.paths]
-kframe = ["src/kframe", "*/kf-cliconfig/src/kframe"]
-tests = ["tests", "*/kf-cliconfig/tests"]
+kframe = ["src/kframe"]
+tests = ["tests", "*/kframe/tests"]
 
 [tool.coverage.report]
 exclude_lines = [
@@ -106,16 +103,17 @@ exclude = [
 preview = true
 extend-ignore = ["TID252", "TRY003", "EM10", "SLF", "FBT", "ARG"]
 
-[tool.semantic_release.branches.main]
-match = "(main)"
-prerelease = false
-
-[tool.semantic_release.branches.quality]
-match = "(quality)"
-prerelease = true
-prerelease_token = "rc"
-
-[tool.semantic_release.branches.development]
-match = "(development)"
-prerelease = true
-prerelease_token = "dev"
+[tool.commitizen]
+name = "cz_conventional_commits"
+tag_format = "v$version"
+version_scheme = "pep440"
+version_provider = "pep621"
+update_changelog_on_bump = true
+annoted_tag = true
+major_version_zero = true
+prerelease_offset = 1
+version_files = [
+    "pyproject.toml/project:^version",
+    "src/kframe/__about__.py:^__version__"
+]
+changelog_increment_filename = "body.md"
