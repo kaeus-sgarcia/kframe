@@ -2,7 +2,8 @@
 
 [![PyPI - Version](https://img.shields.io/pypi/v/kframe.svg)](https://pypi.org/project/kframe)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/kframe.svg)](https://pypi.org/project/kframe)
-![CI](https://github.com/github/docs/actions/workflows/main_ci.yml/badge.svg)
+[![CI](https://github.com/kaeus-sgarcia/kframe/actions/workflows/main_ci.yml/badge.svg)](https://github.com/kaeus-sgarcia/kframe/actions/workflows/main_ci.yml)
+
 -----
 
 **Table of Contents**
