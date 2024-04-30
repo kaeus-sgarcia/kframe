@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "kframe"
-version = "0.2.3.dev8900579366"
+version = "0.2.3.dev8900630317"
 description = 'Kaeus development framework'
 readme = "README.md"
 requires-python = ">=3.10"
