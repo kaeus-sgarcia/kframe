@@ -119,7 +119,7 @@ prerelease_token = "rc"
 match = "(development)"
 prerelease = true
 prerelease_token = "dev"
-version_variable = [
+version_variables = [
   "src/kframe/__about__.py:__version__",
 ]
 
