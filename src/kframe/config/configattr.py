@@ -132,7 +132,14 @@ class ConfigAttr:
     def cli_args(self):
         """Return the CLI arguments for the attribute."""
         if self._cli_args is not None:
-            attrs = {"help": self.description, "dest": self._name}
+            desc_attrs = []
+            if self.required:
+                desc_attrs.append("required")
+            if self.env_var is not None:
+                desc_attrs.append(f"env: {self.env_var}")
+            description = f"{self.description} ({', '.join(desc_attrs)})"
+
+            attrs = {"help": description, "dest": self._name}
             if self.attr_type is bool:
                 attrs |= {"action": "store_const", "const": True}
             return (self._cli_args, attrs)
