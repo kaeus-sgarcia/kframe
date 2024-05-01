@@ -33,6 +33,7 @@ jobs:
         uses: commitizen-tools/commitizen-action@master
         with:
           github_token: ${{ github.token }}
+          changelog_increment_filename: "body.md"
 
       - name: New revision
         id: set_new_revision
@@ -141,6 +142,7 @@ jobs:
       with:
         tag_name: ${{ needs.version_bump.outputs.new_revision }}
         files: dist/*
+        body_path: body.md
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   
