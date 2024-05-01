@@ -1,4 +1,4 @@
-name: Create development version
+name: Dev
 
 on:
   pull_request:
