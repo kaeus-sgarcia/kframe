@@ -1,3 +1,16 @@
+## v0.4.1a2 (2024-05-01)
+
+### Fix
+
+- Update workflow names to reflect their purpose
+- Update changelog_increment_filename to "body.md" in main_pre_release.yml and main_release.yml workflows
+
+## v0.4.0 (2024-05-01)
+
+### Fix
+
+- Update license format
+
 ## v0.3.0 (2024-05-01)
 
 ### Fix
