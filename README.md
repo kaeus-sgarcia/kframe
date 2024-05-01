@@ -7,8 +7,6 @@
 [![CD](https://github.com/kaeus-sgarcia/kframe/actions/workflows/main_release.yml/badge.svg)](https://github.com/kaeus-sgarcia/kframe/actions/workflows/main_release.yml)
 [![GitHub release](https://img.shields.io/github/v/release/kaeus-sgarcia/kframe)](https://github.com/kaeus-sgarcia/kframe)
 
-
-
 -----
 
 **Table of Contents**
