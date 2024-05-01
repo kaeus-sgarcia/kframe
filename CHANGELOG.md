@@ -1,3 +1,16 @@
+## v0.4.3a1 (2024-05-01)
+
+### Fix
+
+- Update CLI argument help message in ConfigAttr class to show required and env_var
+- Update .gitignore and pyproject.toml
+
+### Refactor
+
+- Remove parse_args and include load method to ConfigEntity
+
+## v0.4.2 (2024-05-01)
+
 ## v0.4.2rc1 (2024-05-01)
 
 ## v0.4.2a1 (2024-05-01)
