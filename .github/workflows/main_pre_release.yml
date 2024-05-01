@@ -33,7 +33,6 @@ jobs:
         uses: commitizen-tools/commitizen-action@master
         with:
           github_token: ${{ github.token }}
-          changelog: false
           prerelease: "rc"
 
       - name: New revision

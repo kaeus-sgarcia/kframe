@@ -111,6 +111,7 @@ version_provider = "pep621"
 annoted_tag = true
 major_version_zero = true
 prerelease_offset = 1
+changelog_merge_prerelease = true
 version_files = [
     "pyproject.toml/project:^version",
     "src/kframe/__about__.py:^__version__"

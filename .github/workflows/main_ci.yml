@@ -18,11 +18,6 @@ jobs:
   ci:
     name: CI Python 3.10 on linux
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest]
-        python-version: ['3.10']
 
     steps:
     - uses: actions/checkout@v4
@@ -42,7 +37,7 @@ jobs:
       run: hatch run cov
 
   version_bump:
-    name: "Version bump to dev version"
+    name: "Version bump to alpha version"
     runs-on: "ubuntu-latest"
     needs: ci
     permissions:

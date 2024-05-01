@@ -33,7 +33,6 @@ jobs:
         uses: commitizen-tools/commitizen-action@master
         with:
           github_token: ${{ github.token }}
-          changelog: false
 
       - name: New revision
         id: set_new_revision
@@ -142,7 +141,6 @@ jobs:
       with:
         tag_name: ${{ needs.version_bump.outputs.new_revision }}
         files: dist/*
-        prerelease: true
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   
