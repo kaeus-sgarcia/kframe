@@ -34,6 +34,7 @@ Source = "https://github.com/kaeus-sgarcia/kframe"
 
 # Development environment
 [tool.hatch.envs.default]
+python = "3.10"
 dependencies = [
   "coverage[toml]>=6.5",
   "pytest",
@@ -52,8 +53,7 @@ cov = [
   "test-cov",
   "cov-report",
 ]
-check = "ruff check --fix"
-preview-version = "semantic-release version --print"
+
 
 [tool.hatch.envs.quality]
 dependencies = [
@@ -83,7 +83,7 @@ omit = [
 ]
 
 [tool.coverage.paths]
-kframe = ["src/kframe"]
+kframe = ["src/kframe", "*/kframe/src/kframe"]
 tests = ["tests", "*/kframe/tests"]
 
 [tool.coverage.report]
