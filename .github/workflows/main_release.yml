@@ -140,7 +140,6 @@ jobs:
     - uses: actions/download-artifact@v4
       with:
         name: changelog-body
-        path: ./body.md
     
     - name: Set up Python 3.12
       uses: actions/setup-python@v5
