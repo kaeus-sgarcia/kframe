@@ -34,7 +34,7 @@ jobs:
       run: hatch fmt --check
 
     - name: Run tests
-      run: hatch run cov
+      run: hatch run build_quality:test
 
   version_bump:
     name: "Version bump to alpha version"

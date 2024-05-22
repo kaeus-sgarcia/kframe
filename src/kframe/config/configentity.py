@@ -1,5 +1,7 @@
 """Configuration entity module."""
 
+from __future__ import annotations
+
 import asyncio
 import inspect
 import logging
@@ -53,8 +55,8 @@ class ConfigEntity(type):
     attr: Namespace
     attrs: dict[str, ConfigAttr]
     entity_type: ConfigEntityType
-    parent_module: "ConfigEntity"
-    root_module: "ConfigEntity"
+    parent_module: ConfigEntity
+    root_module: ConfigEntity
 
     def show(cls, file=sys.stdout):
         """Prints entity configuration.
@@ -63,7 +65,7 @@ class ConfigEntity(type):
             file (Any, optional): Output file. Defaults to sys.stdout.
         """
 
-    def __new__(cls, _name, bases, dct, name=None, parent_entity=None, description=None) -> "ConfigEntity":
+    def __new__(cls, _name, bases, dct, name=None, parent_entity=None, description=None) -> ConfigEntity:
         """Create new class.
 
         Args:
@@ -222,7 +224,7 @@ class ConfigEntity(type):
         get_command: bool = True,
         require_command: bool = False,
         show_parser_help: bool = True,
-    ) -> "ConfigEntity" | None:
+    ) -> ConfigEntity | None:
         """Load configuration entity from environment variables and CLI arguments.
 
         Args:
@@ -300,7 +302,7 @@ class ConfigEntity(type):
 class AppCommand(metaclass=ConfigEntity):
     """Base module for command type configuration entities."""
 
-    root_module: "AppModule"
+    root_module: AppModule
 
     show_config = ConfigAttr(
         default=False,
@@ -331,7 +333,7 @@ class AppCommand(metaclass=ConfigEntity):
 class AppModule(metaclass=ConfigEntity):
     """Base module for module type configuration entities."""
 
-    root_module: "AppModule"
+    root_module: AppModule
 
     def show(self, file=sys.stdout):
         """Prints entity configuration.

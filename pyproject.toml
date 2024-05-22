@@ -83,6 +83,16 @@ python = ["3.10", "3.11", "3.12"]
 [tool.hatch.envs.quality.scripts]
 test = "pytest {args:tests}"
 
+[tool.hatch.envs.build_quality]
+dependencies = [
+  "coverage[toml]>=6.5",
+  "pytest",
+]
+features = ["api", "db"]
+
+[tool.hatch.envs.build_quality.scripts]
+test = "pytest {args:tests}"
+
 [tool.hatch.envs.types]
 dependencies = [
   "mypy>=1.0.0",
