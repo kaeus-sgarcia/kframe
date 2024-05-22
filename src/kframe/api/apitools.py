@@ -1,4 +1,5 @@
 """FastAPI application with additional configuration options."""
+
 import logging
 
 import uvicorn
@@ -26,9 +27,9 @@ def config_logging(log_level):
     log_config["disable_existing_loggers"] = True
     log_config["loggers"]["uvicorn.error"]["level"] = log_level
     log_config["loggers"]["uvicorn.access"]["level"] = log_level
-    log_config["formatters"]["default"][
-        "fmt"
-    ] = f"{green}%(levelname)s (api.server):{reset} %(message)s {dark_grey}(%(asctime)s.%(msecs)03d){reset}"
+    log_config["formatters"]["default"]["fmt"] = (
+        f"{green}%(levelname)s (api.server):{reset} %(message)s {dark_grey}(%(asctime)s.%(msecs)03d){reset}"
+    )
     log_config["formatters"]["default"]["datefmt"] = "%Y%m%d-%H:%M:%S"
     log_config["formatters"]["access"]["fmt"] = f"{green}INFO (api.access):{reset} %(message)s"
 

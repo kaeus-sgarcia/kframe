@@ -1,4 +1,5 @@
 """Module for the ConfigAttr and Secret classes."""
+
 import weakref
 from typing import Any, Generic, TypeVar
 
