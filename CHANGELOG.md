@@ -1,3 +1,12 @@
+## v0.5.0a1 (2024-05-22)
+
+### Feat
+
+- Update build_quality test command and environment in CI workflow
+- Add database model management tools
+- Add api management tools
+- Enforce config attributes type and allow async CLI execute methods
+
 ## v0.4.3 (2024-05-01)
 
 ### Fix
