@@ -19,12 +19,14 @@ class TestConfig:
 
         class Command1(AppCommand, name="command_0", description="Command 0 extended help", parent_entity=Module1):
             x = ConfigAttr(env_var="X_VALUE", required=True, default="default_x", cli_args=["--x-value"])
-
+            bool_attr = ConfigAttr(default=False, description="Boolean attribute", cli_args=["--bool-attr"], attr_type=bool)
         assert Command1().x == "default_x"
         assert Command1().b == "default_b"
         assert Command1().a == "default_a"
         assert Command1().log_level == "ERROR"
-        assert set(Command1().attrs.keys()) == {"x", "a", "b", "log_level", "show_config"}
+        assert Command1().bool_attr == False
+        assert type(Command1().bool_attr) == bool
+        assert set(Command1().attrs.keys()) == {"x", "a", "b", "log_level", "show_config", "bool_attr"}
 
     def test_root_module_config(self):
         sys.argv = ["test.py", "module_1", "command_1", "-a", "cli_a", "-l", "DEBUG", "-b", "cli_b", "-x", "cli_x"]

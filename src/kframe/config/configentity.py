@@ -1,9 +1,14 @@
+"""Configuration entity module."""
+
+import asyncio
+import inspect
 import logging
 import os
 import sys
 from argparse import ArgumentError, ArgumentParser, ArgumentTypeError, Namespace
 from collections import ChainMap
 from enum import Enum
+from pathlib import Path
 
 from .configattr import ConfigAttr, Secret
 
@@ -11,12 +16,35 @@ logger = logging.getLogger("kframe.config")
 
 
 class ConfigEntityType(Enum):
+    """Configuration entity type.
+
+    Attributes:
+        base (str): Base entity type.
+        module (str): Module entity type.
+        command (str): Command entity type.
+    """
+
     base = "base"
     module = "Module"
     command = "Command"
 
 
 class ConfigEntity(type):
+    """Metaclass for configuration entities.
+
+    Attributes:
+        _commands (set): Set of commands.
+        _submodules (set): Set of submodules.
+        _attribute_names (set): Set of attribute names.
+        _sources (ChainMap): ChainMap of sources.
+        show_config (ConfigAttr): Show configuration attribute.
+        attr (Namespace): Entity attributes namespace.
+        attrs (dict[str, ConfigAttr]): Entity attributes dictionary.
+        entity_type (ConfigEntityType): Entity type.
+        parent_module (ConfigEntity): Parent module.
+        root_module (ConfigEntity): Root module.
+    """
+
     _commands: set
     _submodules: set
     _attribute_names: set
@@ -29,9 +57,26 @@ class ConfigEntity(type):
     root_module: "ConfigEntity"
 
     def show(cls, file=sys.stdout):
-        """Prints entity configuration"""
+        """Prints entity configuration.
 
-    def __new__(cls, _name, bases, dct, name=None, parent_entity=None, description=None):
+        Args:
+            file (Any, optional): Output file. Defaults to sys.stdout.
+        """
+
+    def __new__(cls, _name, bases, dct, name=None, parent_entity=None, description=None) -> "ConfigEntity":
+        """Create new class.
+
+        Args:
+            _name (str): Class name.
+            bases (tuple): Base classes.
+            dct (dict): Class namespace.
+            name (str, optional): Class name. Defaults to None.
+            parent_entity (ConfigEntity, optional): Parent entity. Defaults to None.
+            description (str, optional): Class description. Defaults to None.
+
+        Returns:
+            ConfigEntity: New class.
+        """
         sources = {}
 
         if len(bases) > 0:
@@ -42,11 +87,11 @@ class ConfigEntity(type):
         for k, v in dct.items():
             if isinstance(v, ConfigAttr) and k not in dct["_sources"]:
                 v._name = k
-                sources[k] = {"default": Secret[v.attr_type](v.default_value) if v.secret else v.default_value}
+                sources[k] = {"default": Secret(v.default_value) if v.secret else v.default_value}
                 v.__doc__ = v.description
 
                 if v.env_var is not None and v.env_var in os.environ:
-                    sources[k]["env"] = Secret[v.attr_type](v.env_var) if v.secret else os.environ[v.env_var]
+                    sources[k]["env"] = cls.cast_attr(v, os.environ[v.env_var])
 
                 if (
                     v.cli_args is None
@@ -55,7 +100,11 @@ class ConfigEntity(type):
                     and isinstance(v.env_var, str)
                     and os.getenv(v.env_var) is None
                 ):
-                    raise AttributeError(f"Required attribute {v} must have a default value or environment variable")
+                    logger.error(
+                        "ERROR: Required attribute %s must have a default value or environment variable",
+                        v.name,
+                    )
+                    sys.exit(1)
 
         dct["_sources"] = ChainMap(sources, dct["_sources"])
         dct["_commands"] = set()
@@ -66,7 +115,7 @@ class ConfigEntity(type):
         attr = {k: dct[k] for k in dct["_attribute_names"]}
 
         def attrs(self) -> dict[str, ConfigAttr]:
-            """Entity attributes"""
+            """Entity attributes."""
             return attr
 
         dct["attr"] = property(lambda self: Namespace(**attr), doc="Entity attributes namespace")
@@ -76,8 +125,13 @@ class ConfigEntity(type):
         dct["parent_module"] = property(lambda self: parent_entity, doc=f"{dct['entity_type'].value} parent module ")
 
         def run(self):
-            """Execute command"""
-            self.execute()
+            """Execute command."""
+            if self.show_config:
+                self.show()
+            if inspect.iscoroutinefunction(self.execute):
+                asyncio.run(self.execute())
+            else:
+                self.execute()
 
         if dct["entity_type"] == ConfigEntityType.command:
             if "__call__" in dct:
@@ -95,7 +149,18 @@ class ConfigEntity(type):
 
         return new_cls
 
-    def __prepare__(cls, bases, name=None, parent_entity=None, description=None):  # noqa: PLW3201
+    def __prepare__(cls, bases, name=None, parent_entity=None, description=None):
+        """Prepare class namespace.
+
+        Args:
+            bases (tuple): Base classes.
+            name (str): Class name.
+            parent_entity (ConfigEntity): Parent entity.
+            description (str): Class description
+
+        Returns:
+            dict: Class namespace.
+        """
         match len(bases):
             case 0:
                 entity_type = ConfigEntityType.base
@@ -135,12 +200,39 @@ class ConfigEntity(type):
                     dct[k] = parent_entity.__dict__[k]
         return dct
 
+    @staticmethod
+    def cast_attr(attr: ConfigAttr, value: str) -> Secret | bool | int | str | None:
+        """Cast attribute value to the correct type.
+
+        Args:
+            attr (ConfigAttr): Configuration attribute.
+            value (str): Value to cast.
+
+        Returns:
+            Any: Casted value.
+        """
+        if attr.secret:
+            return Secret[attr.attr_type](value)  # type: ignore
+        if attr.attr_type is bool:
+            return value.lower().strip() in {"true", "yes", "1", "y"}
+        return attr.attr_type(value)
+
     def load(
         cls,
         get_command: bool = True,
         require_command: bool = False,
         show_parser_help: bool = True,
-    ):
+    ) -> "ConfigEntity" | None:
+        """Load configuration entity from environment variables and CLI arguments.
+
+        Args:
+            get_command (bool, optional): Get command entity. Defaults to True.
+            require_command (bool, optional): Require command entity. Defaults to False.
+            show_parser_help (bool, optional): Show parser help. Defaults to True.
+
+        Returns:
+            ConfigEntity: Configuration entity.
+        """
         logger.debug("Loading %s", cls.__name__)
 
         if cls.entity_type == ConfigEntityType.module:
@@ -154,6 +246,11 @@ class ConfigEntity(type):
             raise AttributeError("Entity must have a base module")
 
         arg_parser = build_parser(base)
+
+        if arg_parser is None:
+            logger.error("Error building parser")
+            return None
+
         try:
             args = vars(arg_parser.parse_known_args()[0])
         except (ArgumentError, ArgumentTypeError):
@@ -163,12 +260,14 @@ class ConfigEntity(type):
 
         current_cls = cls()
         while current_cls is not None:
-            logger.debug("Loading environment variables for %s: %s", current_cls.__name__, current_cls.attrs.keys())
+            logger.debug(
+                "Loading environment variables for %s: %s",
+                current_cls.__name__,
+                current_cls.attrs.keys(),
+            )
             for k, attr in current_cls.attrs.items():
                 if attr.cli_args is not None and attr.name in args and args[attr.name] is not None:
-                    current_cls._sources[k]["cli"] = (
-                        Secret[attr.attr_type](args[attr.name]) if attr.secret else args[attr.name]  # type: ignore
-                    )
+                    current_cls._sources[k]["cli"] = Secret(args[attr.name]) if attr.secret else args[attr.name]
             current_cls = current_cls.parent_module() if current_cls.parent_module is not None else None
 
         logger.debug("Sources for %s: %s", cls.__name__, cls._sources)
@@ -199,6 +298,8 @@ class ConfigEntity(type):
 
 
 class AppCommand(metaclass=ConfigEntity):
+    """Base module for command type configuration entities."""
+
     root_module: "AppModule"
 
     show_config = ConfigAttr(
@@ -209,6 +310,11 @@ class AppCommand(metaclass=ConfigEntity):
     )
 
     def show(self, file=sys.stdout):
+        """Prints entity configuration.
+
+        Args:
+            file (Any, optional): Output file. Defaults to sys.stdout.
+        """
         file.write(f"\nCommand     : {self.__name__}")
         file.write(f"\nNamespace   : {self.namespace}")
         file.write(f"\nDescription : {self.__doc__}")
@@ -223,9 +329,16 @@ class AppCommand(metaclass=ConfigEntity):
 
 
 class AppModule(metaclass=ConfigEntity):
+    """Base module for module type configuration entities."""
+
     root_module: "AppModule"
 
     def show(self, file=sys.stdout):
+        """Prints entity configuration.
+
+        Args:
+            file (Any, optional): Output file. Defaults to sys.stdout.
+        """
         file.write(f"\nModule      : {self.__name__}")
         file.write(f"\nNamespace   : {self.namespace}")
         file.write(f"\nDescription : {self.__doc__}")
@@ -247,12 +360,22 @@ class AppModule(metaclass=ConfigEntity):
         file.write("\n\n")
 
 
-def build_parser(entity: ConfigEntity = AppModule, level=0, arg_parser=None):
+def build_parser(entity: ConfigEntity = AppModule, level=0, arg_parser=None) -> ArgumentParser | None:
+    """Build command line parser for the entity.
+
+    Args:
+        entity (ConfigEntity): Entity to build parser for.
+        level (int): Current level of the entity.
+        arg_parser (ArgumentParser): Argument parser.
+
+    Returns:
+        ArgumentParser: Argument parser.
+    """
     _entity = entity()
 
     if _entity.entity_type is ConfigEntityType.module and entity is entity.root_module:
         logger.debug("Building parser for %s", entity.__name__)
-        arg_parser = ArgumentParser(sys.argv[0], description=entity.__doc__)
+        arg_parser = ArgumentParser(Path(sys.argv[0]).name, description=entity.__doc__)
 
     logger.debug("Adding arguments for %s", entity.__name__)
 

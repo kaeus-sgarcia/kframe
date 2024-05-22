@@ -26,6 +26,19 @@ classifiers = [
 dependencies = [
 ]
 
+[project.optional-dependencies]
+api = [
+  "fastapi==0.111.*",
+  "fastapi-health == 0.4.*",
+  "fastapi-pagination == 0.12.*",
+  "prometheus-fastapi-instrumentator == 6.1.*",
+  "uvicorn[standard] == 0.29.*",
+]
+db = [
+  "sqlalchemy==2.0.*",
+  "alembic==1.13.*",
+]
+
 [project.urls]
 # TODO: Update these URLs
 Documentation = "https://github.com/kaeus-sgarcia/kframe#readme"
@@ -42,6 +55,8 @@ dependencies = [
   "pre-commit",
   "commitizen",
 ]
+features = ["api", "db"]
+
 [tool.hatch.envs.default.scripts]
 test = "pytest {args:tests}"
 test-cov = "coverage run -m pytest {args:tests}"
@@ -60,6 +75,7 @@ dependencies = [
   "coverage[toml]>=6.5",
   "pytest",
 ]
+features = ["api", "db"]
 
 [[tool.hatch.envs.quality.matrix]]
 python = ["3.10", "3.11", "3.12"]
@@ -70,9 +86,12 @@ test = "pytest {args:tests}"
 [tool.hatch.envs.types]
 dependencies = [
   "mypy>=1.0.0",
+  "pytest",
 ]
+features = ["api", "db"]
+
 [tool.hatch.envs.types.scripts]
-check = "mypy --install-types --non-interactive {args:src/kframe tests}"
+check = "mypy --install-types  --ignore-missing-imports --non-interactive {args:src/kframe tests}"
 
 [tool.coverage.run]
 source_pkgs = ["kframe", "tests"]
@@ -100,8 +119,12 @@ exclude = [
 ]
 
 [tool.ruff.lint]
-preview = true
-extend-ignore = ["TID252", "TRY003", "EM10", "SLF", "FBT", "ARG"]
+preview = false
+extend-select = ["D"]
+extend-ignore = ["TID252", "TRY003", "EM10", "SLF", "FBT", "ARG", "B019"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
 
 [tool.commitizen]
 name = "cz_conventional_commits"

@@ -1,3 +1,4 @@
+"""Module for the ConfigAttr and Secret classes."""
 import weakref
 from typing import Any, Generic, TypeVar
 
@@ -178,6 +179,7 @@ class ConfigAttr:
         return self._attr_type
 
     def __repr__(self):
+        """Return a string representation of the ConfigAttr instance."""
         return (
             "<ConfigAttr ("
             f"name={self.name}, "
