@@ -121,7 +121,7 @@ exclude = [
 [tool.ruff.lint]
 preview = false
 extend-select = ["D"]
-extend-ignore = ["TID252", "TRY003", "EM10", "SLF", "FBT", "ARG", "B019"]
+extend-ignore = ["TID252", "TRY003", "EM10", "SLF", "FBT", "ARG", "B019", "TCH010"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
