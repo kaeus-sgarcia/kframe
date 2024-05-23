@@ -1,3 +1,9 @@
+## v0.5.0rc2 (2024-05-23)
+
+### Feat
+
+- Add custom collections package
+
 ## v0.5.0a1 (2024-05-22)
 
 ### Feat
