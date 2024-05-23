@@ -1,4 +1,4 @@
-"""Configuration module."""
+"""Configuration package."""
 
 from .configattr import ConfigAttr, Secret
 from .configentity import AppCommand, AppModule, ConfigEntityType

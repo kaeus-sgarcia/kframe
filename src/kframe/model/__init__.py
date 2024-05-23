@@ -1,4 +1,4 @@
-"""Database management module."""
+"""Database management package."""
 
 from .managedb import ModelManager
 
