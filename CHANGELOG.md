@@ -1,3 +1,9 @@
+## v0.5.0rc4 (2024-05-29)
+
+### Feat
+
+- Add DictObject class for accessing dictionary values as attributes
+
 ## v0.5.0rc2 (2024-05-23)
 
 ### Feat
