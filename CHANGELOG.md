@@ -1,3 +1,9 @@
+## v0.5.0rc6 (2024-05-29)
+
+### Feat
+
+- Add DictObject class to custom collections package
+
 ## v0.5.0rc4 (2024-05-29)
 
 ### Feat
