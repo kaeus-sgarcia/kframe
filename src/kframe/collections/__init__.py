@@ -1,5 +1,5 @@
 """Custom collections package."""
 
-from .collections import OrderedEnum
+from .collections import DictObject, OrderedEnum
 
-__all__ = ["OrderedEnum"]
+__all__ = ["OrderedEnum", "DictObject"]
