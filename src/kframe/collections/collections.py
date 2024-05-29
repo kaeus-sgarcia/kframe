@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from enum import Enum
 from functools import total_ordering
 
@@ -30,3 +31,40 @@ class OrderedEnum(Enum):
                 return True
             return False
         return False
+
+
+class DictObject(dict):
+    """DictObject class that allows accessing dictionary values as attributes."""
+
+    def __init__(self, *args, **kwargs):
+        """Initialize DictObject.
+
+        Args:
+            *args: Dictionaries to merge.
+            **kwargs: Key-value pairs to merge.
+
+        Raises:
+            TypeError: If any of the arguments is not a mapping.
+        """
+        _dict = {}
+        for arg in args:
+            if not isinstance(arg, Mapping):
+                raise TypeError(f"Invalid mapping type {type(arg)}")
+            _dict = _dict | {k: DictObject(v) if isinstance(v, Mapping) else v for k, v in arg.items()}
+
+        _dict = _dict | {k: DictObject(v) if isinstance(v, Mapping) else v for k, v in kwargs.items()}
+        super().__init__(_dict)
+
+    def __getattr__(self, name, default=None):
+        """Get attribute by name.
+
+        Args:
+            name (str): Attribute name.
+            default: Default value.
+
+        Returns:
+            Any: Attribute value.
+        """
+        if name not in self:
+            raise AttributeError(f"Invalid attribute {name}")
+        return self[name]
