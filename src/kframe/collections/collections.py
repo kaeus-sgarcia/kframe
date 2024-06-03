@@ -29,7 +29,8 @@ class OrderedEnum(Enum):
         for elem in self.__class__:
             if self == elem:
                 return True
-            return False
+            if other == elem:
+                return False
         return False
 
 
