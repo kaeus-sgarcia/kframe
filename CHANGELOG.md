@@ -1,3 +1,9 @@
+## v0.5.0rc8 (2024-06-03)
+
+### Fix
+
+- OrderedEnum is not ordering according to enum position
+
 ## v0.5.0rc6 (2024-05-29)
 
 ### Feat
