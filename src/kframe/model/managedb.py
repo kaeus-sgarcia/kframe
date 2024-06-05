@@ -217,8 +217,10 @@ class ModelManager:
         engine = create_engine(self.db_url)
         conn = engine.connect()
         context = MigrationContext.configure(conn, opts={"version_table": self.version_table})
-        current_rev: str | None = context.get_current_revision()
-        return current_rev
+        current_rev: tuple[str, ...] = context.get_current_heads()
+        if not current_rev:
+            return None
+        return current_rev[0]
 
     @property
     def heads(self) -> list[str]:
