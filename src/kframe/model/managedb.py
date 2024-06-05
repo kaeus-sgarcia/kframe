@@ -359,7 +359,7 @@ class ModelManager:
                 choices=self.heads,
             )
         else:
-            revision = self.heads[0]
+            revision = self.heads[0] if revision not in self.heads else revision
 
         with create_engine(self.db_url).begin() as connection:
             alembic_cfg.attributes["connection"] = connection
