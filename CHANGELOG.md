@@ -1,3 +1,9 @@
+## v0.5.0rc12 (2024-06-05)
+
+### Fix
+
+- Refactor managedb.py to handle revision selection logic
+
 ## v0.5.0rc10 (2024-06-05)
 
 ## v0.5.0rc8 (2024-06-03)
