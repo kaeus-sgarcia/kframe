@@ -1,6 +1,7 @@
 """FastAPI application with additional configuration options."""
 
 import logging
+from enum import Enum
 
 import uvicorn
 from fastapi import FastAPI
@@ -133,3 +134,37 @@ class API(FastAPI):
     def add_pagination(self):
         """Add pagination to the FastAPI app."""
         add_pagination(self)
+
+    def configure_sentry(self, sentry_dsn: str | None, path: str | None = None, tags: list[str | Enum] | None = None):
+        """Add Sentry to the FastAPI app.
+
+        Args:
+            app (Any): FastAPI app.
+            sentry_dsn (str): Sentry DSN.
+            path (str, optional): Path to prepend to the Sentry debug endpoint. Defaults to "".
+            tags (List[str], optional): Tags for the Sentry debug endpoint. Defaults to ["Sentry"].
+        """
+        import sentry_sdk
+
+        if tags is None:
+            tags = ["Health & Metrics"]
+
+        if path is None:
+            path = ""
+
+        if sentry_dsn is not None and sentry_dsn != "":
+            sentry_sdk.init(
+                dsn=sentry_dsn,
+                # Set traces_sample_rate to 1.0 to capture 100%
+                # of transactions for performance monitoring.
+                traces_sample_rate=1.0,
+                # Set profiles_sample_rate to 1.0 to profile 100%
+                # of sampled transactions.
+                # We recommend adjusting this value in production.
+                profiles_sample_rate=1.0,
+            )
+
+        @self.get(f"{path}/sentry-debug", tags=tags, name="Sentry Debug")
+        def trigger_error():
+            """Trigger an error to test Sentry."""
+            return 1 / 0
