@@ -1,3 +1,9 @@
+## v0.5.0rc14 (2024-06-06)
+
+### Feat
+
+- Add Sentry integration to FastAPI app
+
 ## v0.5.0rc12 (2024-06-05)
 
 ### Fix
