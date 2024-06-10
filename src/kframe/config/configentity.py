@@ -321,7 +321,7 @@ class AppCommand(metaclass=ConfigEntity):
         file.write(f"\nNamespace   : {self.namespace}")
         file.write(f"\nDescription : {self.__doc__}")
         file.write("\nAttributes")
-        for f in self._attribute_names:
+        for f in sorted(self._attribute_names):
             if getattr(self.attr, f).required:
                 file.write("\n  * ")
             else:
