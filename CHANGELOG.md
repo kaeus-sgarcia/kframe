@@ -1,3 +1,9 @@
+## v0.5.0rc18 (2024-06-12)
+
+### Fix
+
+- Update StaticFiles configuration to include html=True
+
 ## v0.5.0rc16 (2024-06-10)
 
 ## v0.5.0rc14 (2024-06-06)
