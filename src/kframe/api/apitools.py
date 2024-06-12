@@ -113,7 +113,7 @@ class API(FastAPI):
             Returns:
                 Any: OpenAPI schema.
             """
-            self.mount("/static", StaticFiles(directory="static"), name="static")
+            self.mount("/static", StaticFiles(directory="static", html=True), name="static")
 
             if self.openapi_schema:
                 return self.openapi_schema
