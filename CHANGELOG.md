@@ -1,3 +1,11 @@
+## v0.5.1a1 (2024-06-14)
+
+### Fix
+
+- Add contextlib import for suppressing KeyboardInterrupt in ConfigEntity asyn run
+
+## v0.5.0 (2024-06-12)
+
 ## v0.5.0rc19 (2024-06-12)
 
 ## v0.5.0rc18 (2024-06-12)
