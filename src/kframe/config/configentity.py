@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import contextlib
 import inspect
 import logging
 import os
@@ -131,7 +132,8 @@ class ConfigEntity(type):
             if self.show_config:
                 self.show()
             if inspect.iscoroutinefunction(self.execute):
-                asyncio.run(self.execute())
+                with contextlib.suppress(KeyboardInterrupt):
+                    asyncio.run(self.execute())
             else:
                 self.execute()
 
