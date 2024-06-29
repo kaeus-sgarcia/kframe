@@ -84,6 +84,7 @@ class ModelManager:
             engine_config (EngineConfig, optional): Engine configuration. Defaults to None.
             session_config (SessionConfig, optional): Session configuration. Defaults to None.
         """
+        logger.info("Creating Model Manager")
         self._db_url = URL.create(
             drivername=driver,
             username=user,
@@ -121,6 +122,7 @@ class ModelManager:
         Returns:
             Engine: Engine object.
         """
+        logger.info("Creating database engine for %s", self.store_name)
         return create_engine(
             self.db_url,
             echo=self.sql_echo,
@@ -151,7 +153,14 @@ class ModelManager:
         Returns:
             AsyncEngine: Async engine object.
         """
-        return create_async_engine(self.db_url, echo=self.sql_echo, **kwargs)
+        logger.info("Creating async engine for %s", self.store_name)
+        return create_async_engine(
+            self.db_url,
+            echo=self.sql_echo,
+            pool_size=self.pool_size,
+            max_overflow=self.max_overflow,
+            pool_pre_ping=self.pool_pre_ping,
+        )
 
     @cache
     def async_session_maker(self, **kwargs) -> async_sessionmaker:
