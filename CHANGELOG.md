@@ -1,3 +1,11 @@
+## v0.5.2a1 (2024-06-29)
+
+### Fix
+
+- Add logging statements for Model Manager creation and database engine creation
+
+## v0.5.1 (2024-06-14)
+
 ## v0.5.1rc1 (2024-06-14)
 
 ## v0.5.1a1 (2024-06-14)
