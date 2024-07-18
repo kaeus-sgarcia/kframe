@@ -1,3 +1,11 @@
+## v0.5.3a1 (2024-07-18)
+
+### Fix
+
+- Refactor ModelManager.get_heads() to handle single head case
+
+## v0.5.2 (2024-06-29)
+
 ## v0.5.2rc1 (2024-06-29)
 
 ## v0.5.2a1 (2024-06-29)
