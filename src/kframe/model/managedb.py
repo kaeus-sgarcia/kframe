@@ -246,9 +246,12 @@ class ModelManager:
         script_directory = ScriptDirectory.from_config(self.alembic_config)
 
         heads = []
-        for h in script_directory.get_heads():
-            branches = script_directory.get_revision(h).branch_labels
-            heads.extend(list(branches))
+        if len(script_directory.get_heads()) > 1:
+            for h in script_directory.get_heads():
+                branches = script_directory.get_revision(h).branch_labels
+                heads.extend(list(branches))
+        else:
+            heads = script_directory.get_heads()
 
         return [f"{h}@head" for h in heads]
 
@@ -326,6 +329,7 @@ class ModelManager:
             )
             if migrate == "y":
                 self.initialize_db()
+            return
 
         if len(pending) == 0:
             console.print(f"Database is up to date (revision={current_version})\n")
